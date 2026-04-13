@@ -22,12 +22,12 @@ export default function UploadPage() {
       return;
     }
 
-    await supabase.from('dashboards').insert({
-      user_id: userData.user.id,
-      name: file.name,
-      row_count: 4,
-      total_value: 750,
-    });
+    await supabase!.from('dashboards').insert({
+  user_id: userData.user.id,
+  name: file.name,
+  row_count: 4,
+  total_value: 750,
+});
 
     alert('Dashboard saved!');
 
