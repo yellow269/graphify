@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
+
+const supabase = createClient();
 
 export default function DashboardPage() {
   const router = useRouter();
+  const supabase = createClient();
   const [userEmail, setUserEmail] = useState("");
 
   useEffect(() => {
