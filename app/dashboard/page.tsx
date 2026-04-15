@@ -1,8 +1,31 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
+
 export default function DashboardPage() {
+  const router = useRouter();
+  const [userEmail, setUserEmail] = useState("");
+
+  useEffect(() => {
+    async function checkUser() {
+      const { data } = await supabase.auth.getUser();
+
+      if (!data.user) {
+        router.push("/login");
+      } else {
+        setUserEmail(data.user.email || "");
+      }
+    }
+
+    checkUser();
+  }, [router]);
+
   const reports = [
-    { name: 'Sales Q1', rows: 1240, updated: '2 min ago' },
-    { name: 'Marketing Leads', rows: 860, updated: '10 min ago' },
-    { name: 'Revenue Forecast', rows: 430, updated: '1 hour ago' },
+    { name: "Sales Q1", rows: 1240, updated: "2 min ago" },
+    { name: "Marketing Leads", rows: 860, updated: "10 min ago" },
+    { name: "Revenue Forecast", rows: 430, updated: "1 hour ago" },
   ];
 
   return (
@@ -10,29 +33,73 @@ export default function DashboardPage() {
       <div className="flex">
         <aside className="w-72 min-h-screen border-r border-white/10 bg-white/5 backdrop-blur-xl p-6">
           <h1 className="text-2xl font-bold">Graphify</h1>
-          <p className="text-sm text-slate-400 mt-1">Authenticated Dashboard</p>
+          <p className="text-sm text-slate-400 mt-1">
+            Authenticated Dashboard
+          </p>
 
           <nav className="mt-10 space-y-3">
-            <a href="/dashboard" className="block rounded-xl bg-white/10 px-4 py-3">Overview</a>
-            <a href="/upload" className="block rounded-xl px-4 py-3 hover:bg-white/5">Upload CSV</a>
-            <a href="/charts" className="block rounded-xl px-4 py-3 hover:bg-white/5">Charts</a>
-            <a href="/reports" className="block rounded-xl px-4 py-3 hover:bg-white/5">Saved Reports</a>
-            <a href="/settings" className="block rounded-xl px-4 py-3 hover:bg-white/5">Settings</a>
+            <a
+              href="/dashboard"
+              className="block rounded-xl bg-white/10 px-4 py-3"
+            >
+              Overview
+            </a>
+            <a
+              href="/upload"
+              className="block rounded-xl px-4 py-3 hover:bg-white/5"
+            >
+              Upload CSV
+            </a>
+            <a
+              href="/charts"
+              className="block rounded-xl px-4 py-3 hover:bg-white/5"
+            >
+              Charts
+            </a>
+            <a
+              href="/reports"
+              className="block rounded-xl px-4 py-3 hover:bg-white/5"
+            >
+              Saved Reports
+            </a>
+            <a
+              href="/settings"
+              className="block rounded-xl px-4 py-3 hover:bg-white/5"
+            >
+              Settings
+            </a>
           </nav>
 
-          <div className="mt-12 rounded-2xl border border-white/10 bg-white/5 p-4">
-            <p className="text-sm text-slate-400">Signed in as</p>
-            <p className="font-semibold mt-1">julian@graphify.app</p>
-          </div>
-        </aside>
+  <div className="mt-12 rounded-2xl border border-white/10 bg-white/5 p-4">
+    <p className="text-sm text-slate-400">Signed in as</p>
+    <p className="font-semibold mt-1">{userEmail}</p>
+
+    <button
+      onClick={async () => {
+        await supabase.auth.signOut();
+        router.push("/login");
+      }}
+      className="mt-4 w-full rounded-xl bg-red-500/20 px-4 py-3 text-sm hover:bg-red-500/30"
+    >
+      Logout
+    </button>
+  </div>
+</aside>
 
         <section className="flex-1 p-8">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-4xl font-bold">Welcome back, Julian 👋</h2>
-              <p className="text-slate-400 mt-2">Your saved dashboards and analytics workspace</p>
+              <h2 className="text-4xl font-bold">
+                Welcome back, Julian 👋
+              </h2>
+              <p className="text-slate-400 mt-2">
+                Your saved dashboards and analytics workspace
+              </p>
             </div>
-            <a href="/upload" className="rounded-2xl bg-white text-slate-900 px-6 py-3 font-semibold">
+            <a
+              href="/upload"
+              className="rounded-2xl bg-white text-slate-900 px-6 py-3 font-semibold"
+            >
               + New Upload
             </a>
           </div>
@@ -62,7 +129,9 @@ export default function DashboardPage() {
                 >
                   <div>
                     <p className="font-semibold">{report.name}</p>
-                    <p className="text-sm text-slate-400">{report.rows} rows</p>
+                    <p className="text-sm text-slate-400">
+                      {report.rows} rows
+                    </p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-slate-400">Updated</p>

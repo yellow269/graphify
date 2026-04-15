@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { supabase, getCurrentUser } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
+import { getCurrentUser } from '@/lib/auth';
 
 export default function UploadPage() {
   const [fileName, setFileName] = useState('');
